@@ -1,58 +1,67 @@
-name: GitHub Actions Demo
+# 项目自动部署的名称
+name: Publish And Deploy Demo
+# 当push到服务端，且tags为'v'开头（版本标识），则触发自动部署，普通的push不会触发
 on:
-push:
-tags:
-- 'v*'
+  push:
+    tags:
+      - 'v*'
+
+# 自动部署中要执行的任务
 jobs:
-build-and-deploy:
-runs-on: ubuntu-latest
-steps:
+  build-and-deploy:
+    # 运行环境
+    runs-on: ubuntu-latest
+    # 任务的步骤
+    steps:
 
-- name: Checkout
-uses: actions/checkout@master
+      # 下载源码
+      - name: Checkout
+        uses: actions/checkout@master
 
-- name: Build
-uses: actions/setup-node@master
-- run: npm install
-- run: npm run build
-- run: tar -zcvf release.tgz .nuxt static app.js nuxt.config.js package.json
-package-lock.json ecosystem.config.js
+      # 打包构建
+      - name: Build
+        uses: actions/setup-node@master
+      - run: npm install
+      - run: npm run build
+      - run: tar -zcvf release.tgz .nuxt static nuxt.config.js package.json package-lock.json pm2.config.json
 
-- name: Create Release
-id: create_release
-uses: actions/create-release@master
-env:
-GITHUB_TOKEN: ${{ secrets.TOKEN }}
-with:
-tag_name: ${{ github.ref }}
-release_name: Release ${{ github.ref }}
-draft: false
-prerelease: false
+      # 发布 Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.REALWORLDNUXTJS }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
-- name: Upload Release Asset
-id: upload-release-asset
-uses: actions/upload-release-asset@master
-env:
-GITHUB_TOKEN: ${{ secrets.TOKEN }}
-with:
-upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls
-from the CREATE RELEASE step above, referencing it's ID to get its outputs
-object, which include a `upload_url`. See this blog post for more info:
-https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-futuresteps
-asset_path: ./release.tgz
-asset_name: release.tgz
-asset_content_type: application/x-tgz
+      # 上传构建结果到 Release
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.REALWORLDNUXTJS }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release.tgz
+          asset_name: release.tgz
+          asset_content_type: application/x-tgz
 
-- name: Deploy
-uses: appleboy/ssh-action@master
-with:
-host: ${{ secrets.HOST }}
-username: ${{ secrets.USERNAME }}
-password: ${{ secrets.PASSWORD }}
-port: ${{ secrets.PORT }}
-script: |
-cd /root/pm2-test
-wget https://github.com/MyNameHMT/NuxtJSRealWorld/releases/latest/download/release.tgz -O release.tgz
-tar zxvf release.tgz
-npm install --production
-pm2 reload ecosystem.config.js
+      # 部署到服务器
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          # 远程服务器的主机名，登录时的用户名、密码和端口号
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          # 在远程服务器上运行
+          script: |
+            cd /root/realworld-nuxtjs
+            wget https://github.com/MyNameHMT/NuxtJSRealWorld/releases/latest/download/release.tgz -O release.tgz
+            tar zxvf release.tgz
+            npm install --production
+            pm2 reload pm2.config.json
