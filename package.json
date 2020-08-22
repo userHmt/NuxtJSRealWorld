@@ -1,0 +1,22 @@
+{
+  "name": "03-03nuxtjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nuxt",
+    "build":"nuxt build",
+    "start":"nuxt start"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "cookieparser": "^0.1.0",
+    "dayjs": "^1.8.34",
+    "js-cookie": "^2.2.1",
+    "markdown-it": "^11.0.0",
+    "nuxt": "^2.14.3"
+  }
+}

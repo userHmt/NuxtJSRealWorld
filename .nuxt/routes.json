@@ -1,0 +1,43 @@
+[
+  {
+    "path": "/",
+    "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\layout",
+    "children": [
+      {
+        "path": "",
+        "name": "home",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\home"
+      },
+      {
+        "path": "/login",
+        "name": "login",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\login"
+      },
+      {
+        "path": "/register",
+        "name": "register",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\login"
+      },
+      {
+        "path": "/profile/:username",
+        "name": "profile",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\profile"
+      },
+      {
+        "path": "/setting",
+        "name": "setting",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\settings"
+      },
+      {
+        "path": "/editor",
+        "name": "editor",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\editor"
+      },
+      {
+        "path": "/article/:slug",
+        "name": "article",
+        "component": "F:\\\\lagou_study\\\\03-03nuxtjs\\\\pages\\\\article"
+      }
+    ]
+  }
+]
